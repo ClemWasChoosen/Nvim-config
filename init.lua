@@ -118,6 +118,14 @@ require('lazy').setup({
     },
   },
 
+  -- install without yarn or npm
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -159,15 +167,8 @@ require('lazy').setup({
     },
   },
 
-  -- Pour faciliter le choix du theme
-  {
-    'zaldih/themery.nvim',
-    themes = {"dayfox", "onedark"}, -- Your list of installed colorschemes
-    themeConfigFile = "~/.config/nvim/themes/theme.lua", -- Described below
-    livePreview = true, -- Apply theme while browsing. Default to true.
-  },
+  { 'echasnovski/mini.nvim', version = '*' },
 
-  --
   -- Pour avoir le theme un peu different avec des couleurs fade 
   {
     "catppuccin/nvim",
@@ -179,37 +180,67 @@ require('lazy').setup({
     end,
   },
 
-  --  -- Pour avoir le theme comme atom
-  -- {
-  --   'navarasu/onedark.nvim',
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd.colorscheme 'onedark'
-  --   end,
-  -- },
+   -- Pour avoir le theme comme atom
+  {
+    'navarasu/onedark.nvim',
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme 'onedark'
+    end,
+  },
 
   -- Dans ce cas la j'ai choisi un theme nord il y en a plusieurs 
   -- juste changer le nom dans colorscheme
-  -- {
-  --   "EdenEast/nightfox.nvim",
-  --   priority = 1000,
-  --
-  --   config = function()
-  --     vim.cmd.colorscheme 'dayfox'
-  --   end,
-  -- },
+  {
+    "EdenEast/nightfox.nvim",
+    priority = 1000,
+
+    config = function()
+      vim.cmd.colorscheme 'dayfox'
+    end,
+  },
 
   -- Pour le theme special miasme
   -- https://github.com/xero/miasma.nvim
-  -- {
-  --   "xero/miasma.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd("colorscheme miasma")
-  --   end,
-  -- },
+  {
+    "xero/miasma.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd("colorscheme miasma")
+    end,
+  },
 
+  {
+    "rmehri01/onenord.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd("colorscheme onenord")
+    end,
+  },
+  {
+    "neanias/everforest-nvim",
+    version = false,
+    lazy = false,
+    priority = 1000, -- make sure to load this before all the other start plugins
+    -- Optional; default configuration will be used if setup isn't called.
+    config = function()
+      require("everforest").setup({
+        -- Your config here
+      })
+    end,
+  },
+
+  {
+    "zaldih/themery.nvim",
+    config = function()
+      require('themery').setup({
+        themes = { "onenord", "dayfox", "miasma", "catppuccin-mocha", "everforest" },  -- Liste des thèmes que vous voulez charger
+        themeConfigFile = "~/.config/nvim/lua/theme.lua",  -- Fichier pour sauvegarder les configurations
+      })
+    end,
+  },
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -217,7 +248,8 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = true,
-        theme = 'seoul256',
+        theme = 'onenord',
+        -- theme = 'seoul256',
         component_separators = { left = "░▒▓▒░", right = "░▒▓▒░" },
         section_separators = { left = "▓▒░", right = "░▒▓" },
       },

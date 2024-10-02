@@ -81,6 +81,9 @@ require('lazy').setup({
   -- Autoclose brakets,...
   'm4xshen/autoclose.nvim',
 
+  -- Pour avoir un terminal utilisable dans vim
+  {'akinsho/toggleterm.nvim', version = "*", config = true},
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -464,6 +467,23 @@ vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by 
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
+-- Pour Toggleterm 
+vim.keymap.set('n', '<leader>th', ':ToggleTerm<cr>', { desc = '[T]erminal [H]orizontal' })
+vim.keymap.set('n', '<leader>tv', ':ToggleTerm size=40 direction=vertical name=desktop<cr>', { desc = '[T]erminal [V]ertical' })
+vim.keymap.set('n', '<leader>tt', ':ToggleTerm size=40 direction=tab name=desktop<cr>', { desc = '[T]erminal [T]ab' })
+vim.keymap.set('n', '<leader>tf', ':ToggleTerm size=40 direction=float name=desktop<cr>', { desc = '[T]erminal [f]loat' })
+function _G.set_terminal_keymaps()
+  local opts = {buffer = 0}
+  vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], opts)
+  vim.keymap.set('t', 'jk', [[<C-\><C-n>]], opts)
+  vim.keymap.set('t', '<C-h>', [[<Cmd>wincmd h<CR>]], opts)
+  vim.keymap.set('t', '<C-j>', [[<Cmd>wincmd j<CR>]], opts)
+  vim.keymap.set('t', '<C-k>', [[<Cmd>wincmd k<CR>]], opts)
+  vim.keymap.set('t', '<C-l>', [[<Cmd>wincmd l<CR>]], opts)
+  vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], opts)
+end
+
+
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
@@ -593,6 +613,8 @@ require('which-key').add {
   { '<leader>s_', hidden = true },
   { '<leader>w', group = '[W]orkspace' },
   { '<leader>w_', hidden = true },
+  { '<leader>t', group = '[T]erminal' },
+  { '<leader>t_', hidden = true },
 }
 -- document existing key chains
 -- require('which-key').register {

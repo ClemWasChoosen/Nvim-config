@@ -79,8 +79,17 @@ require('lazy').setup({
   'tpope/vim-sleuth',
 
   -- Autoclose brakets,...
-  'm4xshen/autoclose.nvim',
-
+  {
+    "m4xshen/autoclose.nvim",
+    -- Optional; default configuration will be used if setup isn't called.
+    config = function()
+      require("autoclose").setup({
+        keys = {
+          ["$"] = { escape = true, close = true, pair = "$$", disabled_filetypes = {} },
+        },
+      })
+    end,
+  },
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -180,6 +189,16 @@ require('lazy').setup({
     end,
   },
 
+  {
+    "sainnhe/gruvbox-material",
+    name = "gruvbox-material",
+    priority = 1000,
+
+    config = function()
+      vim.cmd.colorscheme 'gruvbox-material'
+    end,
+  },
+
    -- Pour avoir le theme comme atom
   {
     'navarasu/onedark.nvim',
@@ -233,14 +252,22 @@ require('lazy').setup({
   },
 
   {
+    "daschw/leaf.nvim",
+    priority = 1000,
+    config = function()
+      vim.cmd("colorscheme leaf")
+    end,
+  },
+  {
     "zaldih/themery.nvim",
     config = function()
       require('themery').setup({
-        themes = { "onenord", "dayfox", "miasma", "catppuccin-mocha", "everforest" },  -- Liste des thèmes que vous voulez charger
+        themes = { "onenord", "dayfox", "miasma", "catppuccin-mocha", "everforest", "gruvbox-material", "leaf"},  -- Liste des thèmes que vous voulez charger
         -- themeConfigFile = "~/.config/nvim/lua/theme.lua",  -- Fichier pour sauvegarder les configurations
       })
     end,
   },
+
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -630,6 +657,23 @@ local servers = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
+    },
+  },
+  pylsp = {
+    pylsp = {
+      plugins = {
+        flake8 = {
+          enabled = true,          -- Activer flake8
+          maxLineLength = 88,      -- Longueur maximale des lignes
+          ignore = { "E501" },     -- Ignorer les erreurs de longueur de ligne
+        },
+        pycodestyle = {
+          enabled = false,         -- Désactiver pycodestyle
+        },
+        jedi_completion = {
+          fuzzy = true,            -- Activer la complétion fuzzy
+        },
+      },
     },
   },
 }

@@ -75,6 +75,18 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
 
+  {
+    "ray-x/lsp_signature.nvim",
+    event = "InsertEnter",
+    opts = {
+      bind = true,
+      handler_opts = {
+        border = "rounded"
+      }
+    },
+    config = function(_, opts) require'lsp_signature'.setup(opts) end
+  },
+
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
@@ -265,7 +277,7 @@ require('lazy').setup({
     "zaldih/themery.nvim",
     config = function()
       require('themery').setup({
-        themes = { "onenord", "dayfox", "miasma", "catppuccin-mocha", "everforest", "gruvbox-material", "leaf"},  -- Liste des thèmes que vous voulez charger
+        themes = { "miasma", "catppuccin-mocha", "everforest", "gruvbox-material", "leaf"},  -- Liste des thèmes que vous voulez charger
         -- themeConfigFile = "~/.config/nvim/lua/theme.lua",  -- Fichier pour sauvegarder les configurations
       })
     end,
@@ -729,6 +741,21 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
+local on_attach = function(client, bufnr)
+  require "lsp_signature".on_attach({
+    bind = true,
+    handler_opts = {
+      border = "rounded"
+    }
+  }, bufnr)
+end
+
+require('lspconfig').pyright.setup{
+  on_attach = on_attach,
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  -- autres options...
+}
+
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
@@ -776,6 +803,7 @@ cmp.setup {
   },
   sources = {
     { name = 'nvim_lsp' },
+    { name = 'nvim_lsp_signature_help' },
     { name = 'luasnip' },
   },
 }

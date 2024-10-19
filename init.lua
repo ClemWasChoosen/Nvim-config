@@ -76,6 +76,93 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
 
   {
+    "shellRaining/hlchunk.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("hlchunk").setup({
+        chunk = {
+          enable = true,
+          support_filetypes = {
+            "*.lua",
+            "*.python",
+            -- Ajoutez d'autres types de fichiers selon vos besoins
+          },
+          chars = {
+            horizontal_line = "─",
+            vertical_line = "│",
+            left_top = "╭",
+            left_bottom = "╰",
+            right_arrow = ">",
+          },
+          style = {
+            {  fg = "#806d9c", bg = "#3e3d32"  },
+          },
+        },
+        indent = { enable = false },
+        line_num = { enable = true },
+        blank = { enable = false },
+      })
+    end
+  },
+
+
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      "yorickpeterse/nvim-window",
+    },
+    config = function()
+      -- La configuration sera ajoutée ici
+      local nvim_tree = require("nvim-tree")
+      local nvim_window = require("nvim-window")
+
+      nvim_tree.setup({
+        view = {
+          float = {
+            enable = true,
+            open_win_config = function()
+              local screen_w = vim.opt.columns:get()
+              local screen_h = vim.opt.lines:get() - vim.opt.cmdheight:get()
+              local window_w = screen_w * 0.3
+              local window_h = screen_h * 0.8
+              local window_w_int = math.floor(window_w)
+              local window_h_int = math.floor(window_h)
+              local center_x = screen_w - window_w_int - 1
+              local center_y = 1
+              return {
+                border = "rounded",
+                relative = "editor",
+                row = center_y,
+                col = center_x,
+                width = window_w_int,
+                height = window_h_int,
+              }
+            end,
+          },
+        },
+      })
+      -- Configuration de nvim-window pour la transparence
+      nvim_window.setup({
+        normal_hl = "Normal",
+        border_hl = "FloatBorder",
+        blend = 30, -- Ajustez cette valeur pour modifier l'opacité (0-100)
+      })
+
+    end,
+  },
+
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
+
+  {
     "ray-x/lsp_signature.nvim",
     event = "InsertEnter",
     opts = {
@@ -141,14 +228,58 @@ require('lazy').setup({
       'rafamadriz/friendly-snippets',
     },
   },
+  -- En fonction du mode affiche la couleur
+  -- {
+  --   "svampkorg/moody.nvim",
+  --   event = { "ModeChanged", "BufWinEnter", "WinEnter" },
+  --   dependencies = {
+  --     -- or whatever "colorscheme" you use to setup your HL groups :)
+  --     -- Colours can also be set within setup, in which case this is redundant.
+  --     "catppuccin/nvim",
+  --   },
+  --   opts = {
+  --     -- you can set different blend values for your different modes.
+  --     -- Some colours might look better more dark, so set a higher value
+  --     -- will result in a darker shade.
+  --     blends = {
+  --       normal = 0.2,
+  --       insert = 0.2,
+  --       visual = 0.25,
+  --       command = 0.2,
+  --       operator = 0.2,
+  --       replace = 0.2,
+  --       select = 0.2,
+  --       terminal = 0.2,
+  --       terminal_n = 0.2,
+  --     },
+  --     -- there are two ways to define colours for the different modes.
+  --     -- one way is to define theme here in colors. Another way is to
+  --     -- set them up with highlight groups. Any highlight group set takes
+  --     -- precedence over any colours defined here.
+  --     colors = {
+  --       normal = "#00BFFF",
+  --       insert = "#70CF67",
+  --       visual = "#AD6FF7",
+  --       command = "#EB788B",
+  --       operator = "#FF8F40",
+  --       replace = "#E66767",
+  --       select = "#AD6FF7",
+  --       terminal = "#4CD4BD",
+  --       terminal_n = "#00BBCC",
+  --     },
+  --     -- disable filetypes here. Add for example "TelescopePrompt" to
+  --     -- not have any coloured cursorline for the telescope prompt.
+  --     disabled_filetypes = { "TelescopePrompt" },
+  --   },
+  -- },
 
   -- install without yarn or npm
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    ft = { "markdown" },
-    build = function() vim.fn["mkdp#util#install"]() end,
-  },
+  -- {
+  --   "iamcco/markdown-preview.nvim",
+  --   cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  --   ft = { "markdown" },
+  --   build = function() vim.fn["mkdp#util#install"]() end,
+  -- },
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
@@ -422,6 +553,17 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+-- Pou rafficher les repertoires de travail
+-- Fonction pour ouvrir nvim-tree dans une fenêtre flottante
+local function open_nvim_tree()
+  require("nvim-tree.api").tree.open()
+  vim.cmd("NvimWindowToggle")
+end
+-- Mappage pour ouvrir/fermer l'arborescence
+vim.keymap.set('n', '<leader>T', open_nvim_tree, { desc = 'Open tree repository' })
+-- vim.api.nvim_set_keymap("n", "<leader>e", "<cmd>lua open_nvim_tree()<CR>", { noremap = true, silent = true })
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`

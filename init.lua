@@ -558,7 +558,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Fonction pour ouvrir nvim-tree dans une fenêtre flottante
 local function open_nvim_tree()
   require("nvim-tree.api").tree.open()
-  vim.cmd("NvimWindowToggle")
+  -- vim.cmd("NvimWindowToggle")
 end
 -- Mappage pour ouvrir/fermer l'arborescence
 vim.keymap.set('n', '<leader>T', open_nvim_tree, { desc = 'Open tree repository' })
